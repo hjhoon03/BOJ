@@ -1,47 +1,61 @@
+// BOJ 1966
 #include <iostream>
+#include <queue>
 #include <vector>
 
 using namespace std;
 
+int solve();
+
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int t;
+    cin >> t;
 
-    for(int i = 0; i < n; ++i) {
-        int documents, index;
-        cin >> documents >> index;
-
-        vector<int> docs;
-        vector<pair<int, int>> doc_index;
-
-        for(int j = 0; j < documents; ++j) {
-            int tmp;
-            cin >> tmp;
-            doc_index.push_back(pair(tmp, j));
-            docs.push_back(tmp);
-        }
-
-        sort(doc_index.begin(), doc_index.end());
-
-        int target = docs[index];
-        int cnt = 0;
-        int start_index = documents - 1;
-
-        for(int j = documents - 1; target != doc_index[j].first; --j) {
-            ++cnt;
-            start_index = j;
-        }
-
-        for(int j = doc_index[start_index].second + 1; j != index; ++j) {
-            if(docs[j] == target) ++ cnt;
-            if(j == documents - 1) j = -1;
-        }
-
-        cout << ++cnt << '\n';
+    for(int i = 0; i < t; ++i) {
+        cout << solve() << '\n';
     }
 
     return 0;
+}
+
+int solve() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<int> priority(n);
+    queue<pair<int, bool>> printer;
+
+    for(int i = 0; i < n; ++i) {
+        cin >> priority[i];
+        if(i == m)
+            printer.push(make_pair(priority[i], true));
+        else
+            printer.push(make_pair(priority[i], false));
+    }
+
+    sort(priority.begin(), priority.end());
+
+    int cnt = 1, now;
+    bool flag;
+    for(int i = n - 1; i >= 0; --i) {
+        now = priority[i];
+        flag = true;
+        while(flag) {
+            if(printer.front().first == now) {
+                if(printer.front().second)
+                    return cnt;
+                else {
+                    printer.pop();
+                    ++cnt;
+                    flag = false;
+                }
+            } else {
+                printer.push(printer.front());
+                printer.pop();
+            }
+        }
+    }
 }
