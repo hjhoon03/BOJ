@@ -1,31 +1,29 @@
+// BOJ 11279
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <queue>
 
 using namespace std;
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    vector<int> v;
     int n;
     cin >> n;
 
-    for(int i = 0; i < n; i ++) {
-        int tmp;
-        cin >> tmp;
+    unsigned int num;
+    priority_queue<unsigned int> pq;
+    for(int i = 0; i < n; ++i) {
+        cin >> num;
 
-        if(tmp) v.push_back(tmp);
-        else {
-            if(v.empty()) cout << '0' << '\n';
-            else if(v.size() == 1) {
-                cout << v[0] << '\n';
-                v.pop_back();
+        if(num) {
+            pq.push(num);
+        } else {
+            if(pq.empty()) {
+                cout << 0 << '\n';
             } else {
-                int max_index = max_element(v.begin(), v.end()) - v.begin(); // vector의 요소 중 최대값의 index를 구한다 https://notepad96.tistory.com/40
-                cout << v[max_index] << '\n';
-                v.erase(v.begin() + max_index);
+                cout << pq.top() << '\n';
+                pq.pop();
             }
         }
     }
